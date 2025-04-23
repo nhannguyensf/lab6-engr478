@@ -80,7 +80,7 @@ void ADC_Common_Configuration(){
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// Independent Mode
 	ADC123_COMMON->CCR &= ~ADC_CCR_DUAL;
-	ADC123_COMMON->CCR |= 6U;  // 00110: Regular simultaneous mode only
+	// ADC123_COMMON->CCR |= 6U;  // 00110: Regular simultaneous mode only
 }
 
 
@@ -155,7 +155,7 @@ void ADC_Init(void){
 	// ADC_SMPR3_SMP5 = Channel 5 Sample time selection
 	// L1: ADC1->SMPR3 		&= ~ADC_SMPR3_SMP5;		// sample time for first channel, NOTE: These bits must be written only when ADON=0. 
 	ADC1->SMPR1  &= ~ADC_SMPR1_SMP6;      // ADC Sample Time
-	ADC1->SMPR1  |= 0U << 18;             // 3: 24.5 ADC clock cycles @80MHz = 0.3 us
+	ADC1->SMPR1  |= 1U << 18;             // 3: 24.5 ADC clock cycles @80MHz = 0.3 us
 	
 	// ADC control register 2 (ADC_CR2)
 	// L1: ADC1->CR2 			&=  ~ADC_CR2_CONT;    // Disable Continuous conversion mode		
