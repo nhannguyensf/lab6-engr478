@@ -40,7 +40,8 @@ int main(void){
 	int i;
 
 	System_Clock_Init(); 	// Switch System Clock = 80 MHz
-	
+	initMotors();			 // PWM & direction for motors
+
 	LED_Init();						// Set up the pin for the built in Green LED PA(5)
 	TIMING_Init();				// Set up Pin PA(6) as an auxiliary timing pin to be monitored with a scope
 	
@@ -53,8 +54,6 @@ int main(void){
 	turn_off_TIMING();
 	i=0;									// Initialize Result array index
 	
-  initMotors();			 // PWM & direction for motors
-
 	while(1){
 		
 		ADC1->CR |= ADC_CR_ADSTART;				// Start the conversion
@@ -65,7 +64,7 @@ int main(void){
 		turn_off_LED();
 		
 		result[(i++ & 0x00FF)] = ADC1->DR;											// Index array and store reading
-		driveMotor(MOTOR_LEFT, 1000);      // Forward only
+		// driveMotor(MOTOR_LEFT, 1000);      // Forward only
 		
 	}
 }
