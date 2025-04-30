@@ -4,6 +4,7 @@
 #include "LED.h"
 #include "SysTimer.h"
 #include "SysClock.h"
+#include "motor.h"
 
 #define LED_PIN    5
 #define TIMING_PIN 6
@@ -52,6 +53,8 @@ int main(void){
 	turn_off_TIMING();
 	i=0;									// Initialize Result array index
 	
+  initMotors();			 // PWM & direction for motors
+
 	while(1){
 		
 		ADC1->CR |= ADC_CR_ADSTART;				// Start the conversion
@@ -62,7 +65,7 @@ int main(void){
 		turn_off_LED();
 		
 		result[(i++ & 0x00FF)] = ADC1->DR;											// Index array and store reading
-		
+		driveMotor(MOTOR_LEFT, 1000);      // Forward only
 		
 	}
 }
