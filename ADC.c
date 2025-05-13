@@ -98,15 +98,15 @@ void ADC_Pin_Init(void){
 	
 	// GPIO Mode: Input(00), Output(01), AlterFunc(10), Analog(11, reset)
 	// Configure PA1 (ADC12_IN6), PA2 (ADC12_IN7) as Analog
-	GPIOA->MODER |=  3U<<(2*1) | 3U<<(2*2);  // Mode 11 = Analog
+	GPIOA->MODER |=  3U<<(2*0);            // PA0 mode = 11 (Analog)
 	
 	// GPIO Push-Pull: No pull-up, pull-down (00), Pull-up (01), Pull-down (10), Reserved (11)
-	GPIOA->PUPDR &= ~( 3U<<(2*1) | 3U<<(2*2)); // No pull-up, no pull-down
+	GPIOA->PUPDR &= ~(3U<<(2*0));         // PA0 no pull-up/pull-down
 	
 	// GPIO port analog switch control register (ASCR)
 	// 0: Disconnect analog switch to the ADC input (reset state)
 	// 1: Connect analog switch to the ADC input
-	GPIOA->ASCR |= GPIO_ASCR_EN_1 | GPIO_ASCR_EN_2;
+	GPIOA->ASCR  |=  GPIO_ASCR_EN_0;      // Connect analog switch for PA0
 }
 
 //-------------------------------------------------------------------------------------------
@@ -140,8 +140,8 @@ void ADC_Init(void){
 	// Specify the channel number of the 1st conversion in regular sequence
 	// L1: ADC1->SQR5 		|= (5 & ADC_SQR5_SQ1);	// SQ1[4:0] bits (1st conversion in regular sequence)					
 	ADC1->SQR1 &= ~ADC_SQR1_SQ1;
-	ADC1->SQR1 |=  ( 6U << 6 );           	// PA1: ADC12_IN6 
-	ADC1->DIFSEL &= ~ADC_DIFSEL_DIFSEL_6; 	// Single-ended for PA1: ADC12_IN6 
+	ADC1->SQR1 |=  (5U << 6);             // channel 5
+	ADC1->DIFSEL &= ~ADC_DIFSEL_DIFSEL_5; // single-ended on IN5
 	
 	// ADC Sample Time
 	// This sampling time must be enough for the input voltage source to charge the embedded
@@ -154,8 +154,8 @@ void ADC_Init(void){
 	
 	// ADC_SMPR3_SMP5 = Channel 5 Sample time selection
 	// L1: ADC1->SMPR3 		&= ~ADC_SMPR3_SMP5;		// sample time for first channel, NOTE: These bits must be written only when ADON=0. 
-	ADC1->SMPR1  &= ~ADC_SMPR1_SMP6;      // ADC Sample Time
-	ADC1->SMPR1  |= 1U << 18;             // 3: 24.5 ADC clock cycles @80MHz = 0.3 us
+	ADC1->SMPR1  &= ~ADC_SMPR1_SMP5;      // clear sample-time for IN5
+	ADC1->SMPR1  |=  1U << 15;            // e.g. 24.5 cycles @80MHz
 	
 	// ADC control register 2 (ADC_CR2)
 	// L1: ADC1->CR2 			&=  ~ADC_CR2_CONT;    // Disable Continuous conversion mode		
